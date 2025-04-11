@@ -82,3 +82,34 @@ plt.show()
 
 print("=== OBJECTIVE 3 ===")
 print("Top and bottom 10 ZIP per capita graphs saved.\n")
+
+
+# Objective 4: ML Prediction
+monthly_df = monthly_consumption.reset_index()
+monthly_df.columns = ['Month', 'Consumption']
+monthly_df['Timestamp'] = monthly_df['Month'].astype(np.int64) // 10**9
+
+X = monthly_df[['Timestamp']]
+y = monthly_df['Consumption']
+X_train, X_test, y_train, y_test = train_test_split(X, y, shuffle=False, test_size=0.2)
+
+model = LinearRegression()
+model.fit(X_train, y_train)
+
+monthly_df['Predicted'] = model.predict(X)
+
+plt.figure(figsize=(14, 6))
+plt.plot(monthly_df['Month'], monthly_df['Consumption'], label='Actual')
+plt.plot(monthly_df['Month'], monthly_df['Predicted'], label='Predicted', linestyle='--')
+plt.title("Actual vs. Predicted Monthly Consumption")
+plt.ylabel("Consumption (HCF)")
+plt.xlabel("Date")
+plt.legend()
+plt.grid(True)
+plt.tight_layout()
+plt.show()
+
+print("=== OBJECTIVE 4 ===")
+next_month_timestamp = monthly_df['Timestamp'].max() + 2629743
+next_prediction = model.predict([[next_month_timestamp]])
+print(f"Predicted Next Month Consumption: {next_prediction[0]:,.2f} HCF\n")
