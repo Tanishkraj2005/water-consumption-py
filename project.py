@@ -57,3 +57,28 @@ plt.show()
 
 print("=== OBJECTIVE 2 ===")
 print("Water cost trend graph saved as 'graph_objective2_cost_trend.png'\n")
+
+
+# Objective 3: Per Capita ZIP Use
+zip_consumption = df.groupby('RC Code')['Consumption (HCF)'].sum()
+zip_counts = df['RC Code'].value_counts()
+per_capita_zip = zip_consumption / zip_counts
+per_capita_zip_sorted = per_capita_zip.sort_values(ascending=False)
+
+plt.figure(figsize=(12, 6))
+per_capita_zip_sorted.head(10).plot(kind='bar', color='green')
+plt.title("Top 10 ZIP Codes by Per Capita Consumption")
+plt.ylabel("Per Capita Consumption (HCF)")
+plt.xlabel("ZIP Code (RC Code)")
+plt.tight_layout()
+
+plt.figure(figsize=(12, 6))
+per_capita_zip_sorted.tail(10).plot(kind='bar', color='purple')
+plt.title("Bottom 10 ZIP Codes by Per Capita Consumption")
+plt.ylabel("Per Capita Consumption (HCF)")
+plt.xlabel("ZIP Code (RC Code)")
+plt.tight_layout()
+plt.show()
+
+print("=== OBJECTIVE 3 ===")
+print("Top and bottom 10 ZIP per capita graphs saved.\n")
