@@ -113,3 +113,26 @@ print("=== OBJECTIVE 4 ===")
 next_month_timestamp = monthly_df['Timestamp'].max() + 2629743
 next_prediction = model.predict([[next_month_timestamp]])
 print(f"Predicted Next Month Consumption: {next_prediction[0]:,.2f} HCF\n")
+
+
+# Objective 5: Correlation by ZIP
+def safe_corr(group):
+    if len(group) > 1:
+        return pearsonr(group['Consumption (HCF)'], group['Current Charges'])[0]
+    return np.nan
+
+zip_corr = df.groupby('RC Code').apply(safe_corr).dropna()
+zip_corr_sorted = zip_corr.sort_values()
+
+plt.figure(figsize=(12, 6))
+zip_corr_sorted.plot(kind='bar', color='skyblue')
+plt.title("Correlation Between Consumption and Cost by ZIP Code")
+plt.ylabel("Pearson Correlation Coefficient")
+plt.xlabel("ZIP Code (RC Code)")
+plt.tight_layout()
+plt.show()
+
+print("=== OBJECTIVE 5 ===")
+overall_corr, _ = pearsonr(df['Consumption (HCF)'], df['Current Charges'])
+print(f"Overall Correlation: {overall_corr:.2f}")
+print("Correlation plot by ZIP saved.\n")
