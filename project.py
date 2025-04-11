@@ -40,3 +40,20 @@ print("=== OBJECTIVE 1 ===")
 print(f"Highest Consumption Month: {max_month}")
 print(f"Max Consumption: {max_value:,.2f} HCF")
 print(f"Average Monthly: {avg_value:,.2f} HCF\n")
+
+
+# Objective 2: Cost Over Time
+monthly_cost = df.groupby(df['Revenue Month'].dt.to_period('M'))['Current Charges'].sum()
+monthly_cost.index = monthly_cost.index.to_timestamp()
+
+plt.figure(figsize=(14, 6))
+monthly_cost.plot(color='orange')
+plt.title("Monthly Total Water Cost")
+plt.ylabel("Total Charges ($)")
+plt.xlabel("Date")
+plt.grid(True)
+plt.tight_layout()
+plt.show()
+
+print("=== OBJECTIVE 2 ===")
+print("Water cost trend graph saved as 'graph_objective2_cost_trend.png'\n")
